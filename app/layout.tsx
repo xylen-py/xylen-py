@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: ".1xylen", url: "https://github.com/xylen-py" }],
   creator: ".1xylen",
-  metadataBase: new URL("https://xylen.dev"),
+  metadataBase: new URL("https://1xylen.vercel.app"),
   openGraph: {
     title: ".1xylen | Developer & Creator",
     description:
