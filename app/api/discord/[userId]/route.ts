@@ -139,7 +139,7 @@ export async function GET(
                 bot: user.bot || false,
                 system: user.system || false,
                 created_at: new Date(
-                    Number(BigInt(user.id) >> 22n) + 1420070400000
+                    Number(BigInt(user.id) >> BigInt(22)) + 1420070400000
                 ).toISOString(),
             },
         };
