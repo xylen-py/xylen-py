@@ -29,64 +29,7 @@ interface DiscordUser {
 
 const DISCORD_USER_ID = "1270759337916104708";
 
-function StatusDot() {
-    return (
-        <div className="absolute -bottom-0.5 -right-0.5 w-[24px] h-[24px] rounded-full flex items-center justify-center" style={{ background: "#232428" }}>
-            <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.8, duration: 0.3, ease: EASE }}
-                className="w-[16px] h-[16px] rounded-full bg-[#23a55a] relative"
-            >
-                <motion.div
-                    animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 rounded-full bg-[#23a55a]"
-                />
-            </motion.div>
-        </div>
-    );
-}
 
-function ActivityBar() {
-    const activities = ["Coding with VS Code", "Building APIs", "Listening to Spotify"];
-    const [idx, setIdx] = useState(0);
-
-    useEffect(() => {
-        const timer = setInterval(() => setIdx((p) => (p + 1) % activities.length), 3000);
-        return () => clearInterval(timer);
-    }, [activities.length]);
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.15, duration: 0.4 }}
-            className="mt-3 bg-[#1e1f22] rounded-lg px-3 py-2.5 border border-[#2e2f34]/50"
-        >
-            <p className="text-[10px] font-bold text-[#b5bac1] uppercase tracking-wide mb-1">Playing</p>
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex items-center gap-2"
-                >
-                    <div className="w-6 h-6 rounded bg-[#5865f2]/20 flex items-center justify-center shrink-0">
-                        <motion.div
-                            animate={{ scale: [1, 1.15, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                            className="w-2 h-2 rounded-full bg-[#5865f2]"
-                        />
-                    </div>
-                    <span className="text-[12px] text-[#dbdee1] truncate">{activities[idx]}</span>
-                </motion.div>
-            </AnimatePresence>
-        </motion.div>
-    );
-}
 
 export default function DiscordProfile() {
     const [user, setUser] = useState<DiscordUser | null>(null);
@@ -183,6 +126,7 @@ export default function DiscordProfile() {
             className="w-full max-w-[360px] rounded-xl overflow-hidden group relative"
             style={{ background: "#232428" }}
         >
+            {/* Animated border glow */}
             <motion.div
                 animate={{ opacity: [0, 0.15, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -193,6 +137,7 @@ export default function DiscordProfile() {
                 }}
             />
             <div className="relative rounded-xl overflow-hidden" style={{ background: "#232428" }}>
+                {/* Banner */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -223,29 +168,28 @@ export default function DiscordProfile() {
 
                 <div className="relative px-4 pb-4">
                     <div className="flex justify-between items-start -mt-[42px]">
-                        <div className="relative">
+                        <div className="relative z-10">
                             <motion.div
                                 initial={{ scale: 0, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.5, ease: EASE }}
-                                className="w-[84px] h-[84px] rounded-full border-[6px] border-[#232428] overflow-hidden relative bg-[#111214]"
+                                className="relative w-[92px] h-[92px] rounded-full bg-[#232428] flex items-center justify-center -ml-1"
                             >
-                                <Image src={user.avatar_url} alt={user.display_name} fill className="object-cover" unoptimized />
-                                <motion.div
-                                    className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                />
+                                <div className="w-[80px] h-[80px] rounded-full overflow-hidden relative bg-[#111214]">
+                                    <Image src={user.avatar_url} alt={user.display_name} fill className="object-cover" unoptimized />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                                </div>
+                                {user.avatar_decoration_url && (
+                                    <motion.div
+                                        initial={{ scale: 0, opacity: 0, rotate: -20 }}
+                                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                                        transition={{ delay: 0.6, duration: 0.5, ease: EASE }}
+                                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[106px] h-[106px] pointer-events-none z-20"
+                                    >
+                                        <Image src={user.avatar_decoration_url} alt="" fill className="object-contain" unoptimized />
+                                    </motion.div>
+                                )}
                             </motion.div>
-                            {user.avatar_decoration_url && (
-                                <motion.div
-                                    initial={{ scale: 0, opacity: 0, rotate: -20 }}
-                                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                                    transition={{ delay: 0.6, duration: 0.5, ease: EASE }}
-                                    className="absolute -top-[10px] -left-[10px]"
-                                >
-                                    <Image src={user.avatar_decoration_url} alt="" width={104} height={104} className="w-[104px] h-[104px] pointer-events-none" unoptimized />
-                                </motion.div>
-                            )}
-                            <StatusDot />
                         </div>
 
                         {user.badges.length > 0 && (
@@ -253,7 +197,7 @@ export default function DiscordProfile() {
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.7, duration: 0.5, ease: EASE }}
-                                className="mt-[50px] flex items-center gap-1 bg-[#111214] rounded-lg px-2 py-1.5 overflow-hidden"
+                                className="mt-[48px] flex items-center gap-1 bg-[#111214] rounded-lg px-2 py-1.5 overflow-hidden border border-[#2e2f34]"
                             >
                                 {user.badges.map((badge, idx) => (
                                     <motion.div
@@ -265,7 +209,7 @@ export default function DiscordProfile() {
                                         onMouseEnter={() => setHoveredBadge(badge.name)}
                                         onMouseLeave={() => setHoveredBadge(null)}
                                     >
-                                        {!failedBadges.has(badge.name) ? (
+                                        {!failedBadges.has(badge.name) && (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img
                                                 src={badge.icon_url}
@@ -275,10 +219,6 @@ export default function DiscordProfile() {
                                                 className="w-[22px] h-[22px] hover:scale-125 transition-transform duration-200"
                                                 onError={() => handleBadgeError(badge.name)}
                                             />
-                                        ) : (
-                                            <div className="w-[22px] h-[22px] rounded bg-[#5865f2]/30 flex items-center justify-center">
-                                                <div className="w-2 h-2 rounded-full bg-[#5865f2]" />
-                                            </div>
                                         )}
                                         <AnimatePresence>
                                             {hoveredBadge === badge.name && (
@@ -323,6 +263,14 @@ export default function DiscordProfile() {
                             >
                                 Profile
                             </motion.span>
+                            <motion.span
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: 1.0, type: "spring", stiffness: 300 }}
+                                className="text-[9px] px-1.5 py-0.5 rounded bg-[#f0b132] text-black font-bold uppercase"
+                            >
+                                Nitro
+                            </motion.span>
                         </div>
                         <motion.p
                             initial={{ opacity: 0, x: -10 }}
@@ -354,6 +302,8 @@ export default function DiscordProfile() {
                             className="w-full h-px bg-[#2e2f34] my-3 origin-left"
                         />
 
+
+
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.05, duration: 0.4 }}>
                             <p className="text-[11px] font-bold text-[#b5bac1] uppercase tracking-wide mb-1.5">Member Since</p>
                             <div className="flex items-center gap-2.5 text-[13px] text-[#dbdee1]">
@@ -367,11 +317,9 @@ export default function DiscordProfile() {
                                 </svg>
                             </div>
                         </motion.div>
-
-                        <ActivityBar />
                     </motion.div>
                 </div>
             </div>
-        </motion.div>
+        </motion.div >
     );
 }

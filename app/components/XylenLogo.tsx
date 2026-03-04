@@ -9,7 +9,7 @@ export default function XylenLogo({ className = "", width = 120, height = 48 }: 
     return (
         <Image
             src="/xylen.svg"
-            alt=".1xylen"
+            alt="xylen"
             width={width}
             height={height}
             className={`${className} transition-all duration-300`}

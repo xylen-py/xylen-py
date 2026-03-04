@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: ".1xylen | Developer & Creator",
+  title: "xylen | Developer & Creator",
   description:
     "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast. Building premium digital experiences with React, Next.js, and Node.js.",
   keywords: [
@@ -31,32 +31,32 @@ export const metadata: Metadata = {
     "draxity",
     "xylen",
   ],
-  authors: [{ name: ".1xylen", url: "https://github.com/xylen-py" }],
-  creator: ".1xylen",
-  metadataBase: new URL("https://1xylen.vercel.app"),
+  authors: [{ name: "xylen", url: "https://github.com/xylen-py" }],
+  creator: "xylen",
+  metadataBase: new URL("https://xylen.vercel.app"),
   openGraph: {
-    title: ".1xylen | Developer & Creator",
+    title: "xylen | Developer & Creator",
     description:
       "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast. Building premium digital experiences.",
     type: "website",
-    siteName: ".1xylen",
+    siteName: "xylen",
     locale: "en_US",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
-        alt: ".1xylen — Developer & Creator",
+        alt: "xylen — Developer & Creator",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: ".1xylen | Developer & Creator",
+    title: "xylen | Developer & Creator",
     description:
       "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast.",
-    images: ["/og-image.png"],
+    images: ["/api/og"],
   },
   icons: {
     icon: [
@@ -81,11 +81,11 @@ export default function RootLayout({
           rel="alternate"
           type="application/json+oembed"
           href="/api/oembed?format=json"
-          title=".1xylen | Developer & Creator"
+          title="xylen | Developer & Creator"
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased noise-overlay`}
         suppressHydrationWarning
       >
         <ThemeProvider>{children}</ThemeProvider>

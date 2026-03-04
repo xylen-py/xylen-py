@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiArrowDownRight, FiGithub, FiTwitter, FiLinkedin } from "react-icons/fi";
+import { useEffect, useState, useCallback } from "react";
+import { FiArrowDownRight, FiGithub, FiTwitter, FiLinkedin, FiDownload } from "react-icons/fi";
 import { SiDiscord } from "react-icons/si";
 import { PurpleFlare, FloatingParticles, PulseRing } from "./Effects";
 
@@ -24,6 +25,59 @@ const scaleIn = {
         transition: { duration: 0.5, delay: 1.2 + i * 0.08, ease: EASE },
     }),
 };
+
+const roles = [
+    "Full-Stack Developer",
+    "Discord Bot Creator",
+    "Open Source Contributor",
+    "API Architect",
+    "UI/UX Enthusiast",
+];
+
+function TypingEffect() {
+    const [roleIdx, setRoleIdx] = useState(0);
+    const [text, setText] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const typeSpeed = 60;
+    const deleteSpeed = 30;
+    const pauseTime = 2000;
+
+    const tick = useCallback(() => {
+        const currentRole = roles[roleIdx];
+
+        if (!isDeleting) {
+            setText(currentRole.substring(0, text.length + 1));
+            if (text.length + 1 === currentRole.length) {
+                setTimeout(() => setIsDeleting(true), pauseTime);
+                return;
+            }
+        } else {
+            setText(currentRole.substring(0, text.length - 1));
+            if (text.length - 1 === 0) {
+                setIsDeleting(false);
+                setRoleIdx((prev) => (prev + 1) % roles.length);
+                return;
+            }
+        }
+    }, [text, isDeleting, roleIdx]);
+
+    useEffect(() => {
+        const timer = setTimeout(tick, isDeleting ? deleteSpeed : typeSpeed);
+        return () => clearTimeout(timer);
+    }, [tick, isDeleting]);
+
+    return (
+        <span className="gradient-text">
+            {text}
+            <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.5, repeat: Infinity }}
+                className="inline-block w-[3px] h-[1em] bg-accent-primary ml-1 align-middle"
+            />
+        </span>
+    );
+}
 
 export default function Hero() {
     return (
@@ -78,12 +132,13 @@ export default function Hero() {
                     initial="hidden"
                     animate="visible"
                     custom={1}
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] max-w-4xl"
+                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] max-w-5xl"
                 >
                     I build{" "}
                     <span className="gradient-text">digital</span>
                     <br />
-                    experiences that{" "}
+                    experiences that
+                    <br />
                     <span className="relative inline-block">
                         <span className="gradient-text">matter</span>
                         <motion.svg
@@ -111,12 +166,23 @@ export default function Hero() {
                     </span>
                 </motion.h1>
 
+                {/* Typing roles */}
+                <motion.div
+                    variants={slideUp}
+                    initial="hidden"
+                    animate="visible"
+                    custom={1.5}
+                    className="mt-6 text-xl md:text-2xl font-mono font-medium h-10"
+                >
+                    <TypingEffect />
+                </motion.div>
+
                 <motion.p
                     variants={slideUp}
                     initial="hidden"
                     animate="visible"
                     custom={2}
-                    className="mt-8 text-lg md:text-xl text-charcoal-300 max-w-2xl leading-relaxed"
+                    className="mt-6 text-lg md:text-xl text-charcoal-300 max-w-2xl leading-relaxed"
                 >
                     Full-Stack Developer &amp; Open Source Creator crafting premium web
                     applications, Discord bots, and tools that push boundaries.
@@ -139,12 +205,12 @@ export default function Hero() {
                         <FiArrowDownRight className="text-xl group-hover:rotate-45 transition-transform duration-300" />
                     </motion.a>
                     <motion.a
-                        href="#contact"
-                        whileHover={{ scale: 1.05, borderColor: "rgba(167,139,250,0.6)" }}
+                        href="#about"
+                        whileHover={{ scale: 1.05, borderColor: "rgba(167,139,250,0.4)" }}
                         whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-3 px-8 py-4 rounded-2xl border border-charcoal-600 text-charcoal-200 font-semibold text-base hover:text-white hover:bg-charcoal-800 transition-all duration-300"
+                        className="flex items-center gap-2 px-6 py-4 rounded-2xl border border-charcoal-700 text-charcoal-300 font-medium text-sm hover:text-white hover:border-accent-primary/30 transition-all duration-300"
                     >
-                        Get in Touch
+                        <FiDownload className="text-base" /> Resume
                     </motion.a>
                 </motion.div>
 
@@ -174,6 +240,7 @@ export default function Hero() {
                     ))}
                 </div>
 
+                {/* Scroll indicator */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

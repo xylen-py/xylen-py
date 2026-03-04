@@ -58,7 +58,7 @@ export default function About() {
                         </h2>
                         <div className="space-y-4 text-charcoal-300 leading-relaxed text-lg">
                             <p>
-                                Hey! I&apos;m <strong className="text-white">.1xylen</strong> (aka{" "}
+                                Hey! I&apos;m <strong className="text-white">xylen</strong> (aka{" "}
                                 <strong className="text-white">ζ͜͡Ð R Λ X ! T Y</strong>) — a full-stack
                                 developer who loves turning ambitious ideas into elegant,
                                 high-performance applications. From interactive web experiences

@@ -13,7 +13,6 @@ const footerLinks = [
             { label: "Skills", href: "#skills" },
             { label: "Projects", href: "#projects" },
             { label: "Experience", href: "#experience" },
-            { label: "Contact", href: "#contact" },
         ],
     },
     {
@@ -83,7 +82,7 @@ export default function Footer() {
 
                 <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-charcoal-500 flex items-center gap-1">
-                        © {CURRENT_YEAR} .1xylen. Built with <FiHeart className="text-red-500 text-xs" /> &amp; Next.js
+                        © {CURRENT_YEAR} xylen. Built with <FiHeart className="text-red-500 text-xs" /> &amp; Next.js
                     </p>
                     <button
                         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

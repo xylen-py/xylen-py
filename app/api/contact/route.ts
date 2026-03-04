@@ -10,7 +10,7 @@ const submissions: ContactPayload[] = [];
 
 export async function GET() {
     return NextResponse.json({
-        message: "Contact API by .1xylen",
+        message: "Contact API by xylen",
         total_submissions: submissions.length,
     });
 }

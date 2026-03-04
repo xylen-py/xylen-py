@@ -12,7 +12,6 @@ const navLinks = [
     { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
     { label: "Experience", href: "#experience" },
-    { label: "Contact", href: "#contact" },
 ];
 
 function ThemeToggle() {
@@ -118,13 +117,6 @@ export default function Navbar() {
 
                     <div className="hidden md:flex items-center gap-3">
                         <ThemeToggle />
-                        <a
-                            href="#contact"
-                            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full bg-gradient-to-r from-accent-primary to-accent-tertiary text-white hover:shadow-[0_0_30px_rgba(167,139,250,0.3)] transition-all duration-300 hover:scale-105"
-                        >
-                            <span className="w-2 h-2 bg-green-400 rounded-full pulse-dot" />
-                            Let&apos;s Talk
-                        </a>
                     </div>
 
                     <div className="md:hidden flex items-center gap-2">
@@ -164,17 +156,7 @@ export default function Navbar() {
                                 </motion.li>
                             ))}
                         </ul>
-                        <motion.a
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            href="#contact"
-                            onClick={() => setMobileOpen(false)}
-                            className="mt-8 flex items-center justify-center gap-2 w-full py-4 text-lg font-medium rounded-2xl bg-gradient-to-r from-accent-primary to-accent-tertiary text-white"
-                        >
-                            <span className="w-2 h-2 bg-green-400 rounded-full pulse-dot" />
-                            Let&apos;s Talk
-                        </motion.a>
+
                     </motion.div>
                 )}
             </AnimatePresence>
