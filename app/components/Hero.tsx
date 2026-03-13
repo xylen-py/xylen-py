@@ -132,7 +132,7 @@ export default function Hero() {
                     initial="hidden"
                     animate="visible"
                     custom={1}
-                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] max-w-5xl"
+                    className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] max-w-5xl"
                 >
                     I build{" "}
                     <span className="gradient-text">digital</span>
