@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: DISPLAY_NAME, url: "https://github.com/xylen-py" }],
   creator: DISPLAY_NAME,
-  metadataBase: new URL("https://xylen.vercel.app"),
-  openGraph: {
+  metadataBase: new URL("https://1xylen.vercel.app"),    
+  openGraph: {  
     title: TITLE,
     description: "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast. Building premium digital experiences.",
     type: "website",
