@@ -15,10 +15,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const DISPLAY_NAME = "ζ͜͡Ð R Λ X ! T Y";
+const TITLE = `${DISPLAY_NAME} • Developer`;
+const DESCRIPTION = "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast.";
+
 export const metadata: Metadata = {
-  title: "xylen | Developer & Creator",
-  description:
-    "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast. Building premium digital experiences with React, Next.js, and Node.js.",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "developer",
     "portfolio",
@@ -31,31 +34,29 @@ export const metadata: Metadata = {
     "draxity",
     "xylen",
   ],
-  authors: [{ name: "xylen", url: "https://github.com/xylen-py" }],
-  creator: "xylen",
+  authors: [{ name: DISPLAY_NAME, url: "https://github.com/xylen-py" }],
+  creator: DISPLAY_NAME,
   metadataBase: new URL("https://xylen.vercel.app"),
   openGraph: {
-    title: "xylen | Developer & Creator",
-    description:
-      "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast. Building premium digital experiences.",
+    title: TITLE,
+    description: "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast. Building premium digital experiences.",
     type: "website",
-    siteName: "xylen",
+    siteName: DISPLAY_NAME,
     locale: "en_US",
     images: [
       {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "xylen — Developer & Creator",
+        alt: `${DISPLAY_NAME} — Developer & Creator`,
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "xylen | Developer & Creator",
-    description:
-      "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast.",
+    title: TITLE,
+    description: "Full-Stack Developer, Discord Bot Creator, and Open Source Enthusiast.",
     images: ["/api/og"],
   },
   icons: {
@@ -81,7 +82,7 @@ export default function RootLayout({
           rel="alternate"
           type="application/json+oembed"
           href="/api/oembed?format=json"
-          title="xylen | Developer & Creator"
+          title={TITLE}
         />
       </head>
       <body
