@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: "Only JSON format is supported" }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://xylen.vercel.app";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://1xylen.vercel.app";
 
     const DISPLAY_NAME = "ζ͜͡Ð R Λ X ! T Y";
 
