@@ -38,8 +38,8 @@ i drink coffee to code, building robust backend systems and exploring new archit
 
 <br>
 
-<a href="https://discord.com/users/1270759337916104708" target="_blank">
-  <img src="https://lanyard.cnrad.dev/api/1270759337916104708?theme=dark&bg=282A36&borderRadius=15px&animated=true" align="right" width="250" alt="discord presence" />
+<a href="https://discord.com/users/1356648920389783724" target="_blank">
+  <img src="https://lanyard.cnrad.dev/api/1356648920389783724?theme=dark&bg=282A36&borderRadius=15px&animated=true" align="right" width="250" alt="discord presence" />
 </a>
 
 <b>workspace & tools</b>
