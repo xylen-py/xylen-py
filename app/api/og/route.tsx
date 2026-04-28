@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 export const runtime = "edge";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
-const DISCORD_USER_ID = "1270759337916104708";
+const DISCORD_USER_ID = "1356648920389783724";
 const DISPLAY_NAME = "ζ͜͡Ð R Λ X ! T Y";
 
 export async function GET(req: NextRequest) {
