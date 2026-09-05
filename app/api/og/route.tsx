@@ -1,25 +1,13 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import { getDiscordProfile } from "../../actions/discord";
 
 export const runtime = "edge";
 
-const DISCORD_API_BASE = "https://discord.com/api/v10";
-const DISCORD_USER_ID = "1270759337916104708";
-const DISPLAY_NAME = "ζ͜͡Ð R Λ X ! T Y";
-
 export async function GET(req: NextRequest) {
     try {
-        const botToken = process.env.DISCORD_BOT_TOKEN;
-
-        if (!botToken) {
-            throw new Error("Discord bot token not configured.");
-        }
-
-        const [userRes, latinFontRes, greekFontRes] = await Promise.all([
-            fetch(`${DISCORD_API_BASE}/users/${DISCORD_USER_ID}`, {
-                headers: { Authorization: `Bot ${botToken}` },
-                next: { revalidate: 3600 },
-            }),
+        const [profileRes, latinFontRes, greekFontRes] = await Promise.all([
+            getDiscordProfile(),
             fetch('https://raw.githubusercontent.com/googlefonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf', {
                 next: { revalidate: 31536000 },
             }),
@@ -28,9 +16,10 @@ export async function GET(req: NextRequest) {
             }),
         ]);
 
-        if (!userRes.ok) throw new Error("Could not fetch Discord profile");
+        if (!profileRes.success || !profileRes.user) throw new Error("Could not fetch Discord profile");
 
-        const user = await userRes.json();
+        const user = profileRes.user;
+        const displayName = user.display_name || user.name;
 
         const fonts = [];
         if (latinFontRes.ok) {
@@ -54,16 +43,12 @@ export async function GET(req: NextRequest) {
             console.error("Failed to load Greek font");
         }
 
-        const avatarUrl = user.avatar
-            ? `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${user.avatar}.png?size=512`
-            : `https://cdn.discordapp.com/embed/avatars/${(BigInt(DISCORD_USER_ID) >> BigInt(22)) % BigInt(6)}.png`;
+        const avatarUrl = user.display_avatar?.url || user.avatar?.url || `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-        const bannerUrl = user.banner
-            ? `https://cdn.discordapp.com/banners/${DISCORD_USER_ID}/${user.banner}.png?size=1024`
-            : null;
+        const bannerUrl = user.banner?.url || null;
 
-        const accentHex = user.accent_color ? `#${user.accent_color.toString(16).padStart(6, "0")}` : "#5865F2";
-        const bannerBg = user.banner_color || accentHex;
+        const accentHex = user.accent_color?.hex || "#5865F2";
+        const bannerBg = accentHex;
 
         return new ImageResponse(
             (
@@ -156,7 +141,7 @@ export async function GET(req: NextRequest) {
                                     alignItems: "center",
                                 }}
                             >
-                                {DISPLAY_NAME}
+                                {displayName}
                             </div>
                             <div
                                 style={{

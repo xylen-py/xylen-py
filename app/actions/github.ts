@@ -1,8 +1,14 @@
-import { NextResponse } from "next/server";
+"use server";
 
-const GITHUB_USERNAME = "xylen-py";
+import { GitHubData } from "../../lib/types";
 
-export async function GET() {
+export async function getGithubStats(username?: string) {
+    const user = username || process.env.GITHUB_USERNAME;
+
+    if (!user) {
+        return { success: false, error: "GitHub username not configured." };
+    }
+
     try {
         const headers: HeadersInit = {
             Accept: "application/vnd.github.v3+json",
@@ -10,15 +16,15 @@ export async function GET() {
         };
 
         const [userRes, reposRes] = await Promise.all([
-            fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, { headers, next: { revalidate: 3600 } }),
-            fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=stars&per_page=6&direction=desc`, {
+            fetch(`https://api.github.com/users/${user}`, { headers, next: { revalidate: 3600 } }),
+            fetch(`https://api.github.com/users/${user}/repos?sort=stars&per_page=6&direction=desc`, {
                 headers,
                 next: { revalidate: 3600 },
             }),
         ]);
 
         if (!userRes.ok || !reposRes.ok) {
-            return NextResponse.json({ success: false, error: "GitHub API error" }, { status: 502 });
+            return { success: false, error: "GitHub API error" };
         }
 
         const userData = await userRes.json();
@@ -38,16 +44,17 @@ export async function GET() {
             0
         );
 
-        return NextResponse.json({
+        return {
             success: true,
             data: {
+                username: user,
                 repos,
                 totalStars,
                 totalRepos: userData.public_repos,
                 followers: userData.followers,
-            },
-        });
+            } as GitHubData,
+        };
     } catch {
-        return NextResponse.json({ success: false, error: "Failed to fetch GitHub data" }, { status: 500 });
+        return { success: false, error: "Failed to fetch GitHub data" };
     }
 }

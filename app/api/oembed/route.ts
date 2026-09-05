@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getDiscordProfile } from "../../actions/discord";
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
@@ -9,9 +10,10 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: "Only JSON format is supported" }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://1xylen.vercel.app";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://1xylen.site";
 
-    const DISPLAY_NAME = "ζ͜͡Ð R Λ X ! T Y";
+    const profile = await getDiscordProfile();
+    const DISPLAY_NAME = profile.success && profile.user ? (profile.user.display_name || profile.user.name) : "Developer";
 
     return NextResponse.json({
         version: "1.0",

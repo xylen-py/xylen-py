@@ -1,165 +1,81 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import XylenLogo from "./XylenLogo";
-import { useTheme } from "./ThemeProvider";
-import { FiSun, FiMoon, FiMonitor } from "react-icons/fi";
-
-const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Skills", href: "#skills" },
-    { label: "Projects", href: "#projects" },
-    { label: "Experience", href: "#experience" },
-];
-
-function ThemeToggle() {
-    const { theme, cycleTheme } = useTheme();
-
-    const icons = {
-        dark: FiMoon,
-        light: FiSun,
-        system: FiMonitor,
-    };
-    const labels = {
-        dark: "Dark",
-        light: "Light",
-        system: "System",
-    };
-    const Icon = icons[theme];
-
-    return (
-        <motion.button
-            onClick={cycleTheme}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative flex items-center gap-1.5 px-3 py-2 rounded-xl bg-charcoal-800 border border-white/5 text-charcoal-200 hover:text-accent-primary hover:border-accent-primary/30 transition-all duration-300 text-sm"
-            aria-label={`Theme: ${labels[theme]}`}
-            title={`Theme: ${labels[theme]} — Click to change`}
-        >
-            <AnimatePresence mode="wait">
-                <motion.span
-                    key={theme}
-                    initial={{ y: -10, opacity: 0, rotate: -45 }}
-                    animate={{ y: 0, opacity: 1, rotate: 0 }}
-                    exit={{ y: 10, opacity: 0, rotate: 45 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center"
-                >
-                    <Icon className="text-sm" />
-                </motion.span>
-            </AnimatePresence>
-            <span className="hidden sm:inline text-xs font-medium">{labels[theme]}</span>
-        </motion.button>
-    );
-}
+import { getDiscordProfile } from "../actions/discord";
+import { FiGithub } from "react-icons/fi";
+import { SiDiscord } from "react-icons/si";
+import Loader from "./Loader";
 
 export default function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState("home");
+    const [profile, setProfile] = useState<{ avatar: string; name: string; decoration?: string } | null>(null);
+    const [status, setStatus] = useState("offline");
+
+    const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "xylen-py";
+    const userId = process.env.NEXT_PUBLIC_USER_ID || "1356648920389783724";
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
-            const sections = navLinks.map((l) => l.href.replace("#", ""));
-            for (let i = sections.length - 1; i >= 0; i--) {
-                const el = document.getElementById(sections[i]);
-                if (el) {
-                    const rect = el.getBoundingClientRect();
-                    if (rect.top <= 120) {
-                        setActiveSection(sections[i]);
-                        break;
-                    }
-                }
+        getDiscordProfile().then((res) => {
+            if (res.success && res.user) {
+                const u = res.user;
+                setProfile({
+                    avatar: u.display_avatar?.url || u.avatar?.url || "https://cdn.discordapp.com/embed/avatars/0.png",
+                    name: u.display_name || u.name,
+                    decoration: u.avatar_decoration?.url,
+                });
             }
+        });
+        
+        const fetchLanyard = () => {
+            fetch(`https://api.lanyard.rest/v1/users/${userId}`)
+                .then(res => res.json())
+                .then(json => {
+                    if (json.success) setStatus(json.data.discord_status);
+                })
+                .catch(() => {});
         };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+        fetchLanyard();
+        const int = setInterval(fetchLanyard, 10000);
+        return () => clearInterval(int);
+    }, [userId]);
+
+    const statusColors: Record<string, string> = {
+        online: "bg-[#23a559]",
+        idle: "bg-[#f0b132]",
+        dnd: "bg-[#f23f42]",
+        offline: "bg-[#80848e]",
+    };
 
     return (
-        <>
-            <motion.nav
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "nav-blur" : ""}`}
-            >
-                <div className="max-w-[1200px] mx-auto px-6 md:px-12 flex items-center justify-between h-[72px]">
-                    <a href="#home" className="flex items-center gap-2 group">
-                        <XylenLogo width={100} height={40} className="opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
-                    </a>
-
-                    <ul className="hidden md:flex items-center gap-1">
-                        {navLinks.map((link) => (
-                            <li key={link.href}>
-                                <a
-                                    href={link.href}
-                                    className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${activeSection === link.href.replace("#", "")
-                                        ? "text-white"
-                                        : "text-charcoal-300 hover:text-white"
-                                        }`}
-                                >
-                                    {activeSection === link.href.replace("#", "") && (
-                                        <motion.div
-                                            layoutId="activeNav"
-                                            className="absolute inset-0 bg-charcoal-700 rounded-lg"
-                                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                        />
-                                    )}
-                                    <span className="relative z-10">{link.label}</span>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-
-                    <div className="hidden md:flex items-center gap-3">
-                        <ThemeToggle />
-                    </div>
-
-                    <div className="md:hidden flex items-center gap-2">
-                        <ThemeToggle />
-                        <button
-                            onClick={() => setMobileOpen(!mobileOpen)}
-                            className="flex flex-col gap-1.5 p-2"
-                            aria-label="Toggle menu"
-                        >
-                            <motion.span animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }} className="w-6 h-0.5 bg-charcoal-100 block" />
-                            <motion.span animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }} className="w-6 h-0.5 bg-charcoal-100 block" />
-                            <motion.span animate={mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }} className="w-6 h-0.5 bg-charcoal-100 block" />
-                        </button>
-                    </div>
+        <nav className="w-full">
+            <div className="max-w-3xl mx-auto px-6 h-24 flex items-center justify-between font-mono">
+                <div className="flex items-center gap-4">
+                    {profile ? (
+                        <>
+                            <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                                <img src={profile.avatar} alt="Avatar" className="w-10 h-10 rounded-full shadow-lg" />
+                                {profile.decoration && (
+                                    <img src={profile.decoration} alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 max-w-none pointer-events-none scale-[1.15]" />
+                                )}
+                                <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#0d1117] ${statusColors[status] || statusColors.offline}`} />
+                            </div>
+                            <span className="font-bold text-gray-900 dark:text-white text-xl tracking-wide">
+                                {profile.name}
+                            </span>
+                        </>
+                    ) : (
+                        <Loader inline />
+                    )}
                 </div>
-            </motion.nav>
 
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-40 bg-charcoal-900/95 backdrop-blur-xl pt-24 px-8 md:hidden"
-                    >
-                        <ul className="flex flex-col gap-2">
-                            {navLinks.map((link, i) => (
-                                <motion.li key={link.href} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
-                                    <a
-                                        href={link.href}
-                                        onClick={() => setMobileOpen(false)}
-                                        className="block py-4 text-2xl font-medium text-charcoal-200 hover:text-white transition-colors border-b border-white/5"
-                                    >
-                                        {link.label}
-                                    </a>
-                                </motion.li>
-                            ))}
-                        </ul>
-
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
+                <div className="flex items-center gap-4 text-gray-500 dark:text-[#8b949e]">
+                    <a href={`https://github.com/${githubUsername}`} target="_blank" rel="noreferrer" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+                        <FiGithub className="text-xl" />
+                    </a>
+                    <a href={`https://discord.com/users/${userId}`} target="_blank" rel="noreferrer" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+                        <SiDiscord className="text-xl" />
+                    </a>
+                </div>
+            </div>
+        </nav>
     );
 }

@@ -1,163 +1,113 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
-import Skills from "./components/Skills";
-import TechOrbit from "./components/TechOrbit";
-import CodeSlideshow from "./components/CodeSlideshow";
-import Projects from "./components/Projects";
-import GithubStats from "./components/GithubStats";
-import Testimonials from "./components/Testimonials";
-import Experience from "./components/Experience";
-import Footer from "./components/Footer";
-import CursorGlow from "./components/CursorGlow";
-import { PurpleFlare } from "./components/Effects";
-
-const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
-function PageLoader() {
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5, ease: EASE }}
-      className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ background: "#0d0d0d" }}
-    >
-      <div className="flex flex-col items-center gap-6">
-        <motion.div className="relative w-20 h-20">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 rounded-full border-2 border-transparent border-t-accent-primary border-r-accent-tertiary"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-2 rounded-full border-2 border-transparent border-b-accent-secondary border-l-accent-primary"
-          />
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-4 rounded-full border border-transparent border-t-accent-tertiary/50"
-          />
-          <motion.div
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <div className="w-3 h-3 rounded-full bg-accent-primary shadow-[0_0_20px_rgba(167,139,250,0.5)]" />
-          </motion.div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-sm font-mono text-charcoal-400 tracking-[0.3em]"
-        >
-          INITIALIZING
-        </motion.div>
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: 120 }}
-          transition={{ duration: 1.2, ease: EASE }}
-          className="h-[2px] rounded-full bg-gradient-to-r from-accent-primary via-accent-tertiary to-accent-secondary"
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-function SectionDivider() {
-  return (
-    <div className="relative h-px w-full max-w-[1200px] mx-auto">
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: EASE }}
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-primary/20 to-transparent origin-center"
-      />
-    </div>
-  );
-}
+import DiscordProfile from "./components/DiscordProfile";
+import GithubProjects from "./components/GithubProjects";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
+    const [tab, setTab] = useState("Home");
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    const displayName = process.env.NEXT_PUBLIC_SITE_NAME || "xylen";
+    const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "xylen-py";
 
-  return (
-    <>
-      <CursorGlow />
-      <AnimatePresence>
-        {loading && <PageLoader />}
-      </AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: loading ? 0 : 1 }}
-        transition={{ duration: 0.5, ease: EASE }}
-      >
-        <Navbar />
-        <main>
-          <Hero />
-          <SectionDivider />
-          <About />
-          <SectionDivider />
+    return (
+        <div className="min-h-screen bg-white dark:bg-[#0d1117] text-gray-900 dark:text-[#c9d1d9] font-mono selection:bg-[#58a6ff] selection:text-white pb-20 transition-colors">
+            <Navbar />
+            <main className="max-w-3xl mx-auto px-6 pt-24">
+                <div className="flex border-b border-gray-200 dark:border-[#30363d] mb-10 transition-colors">
+                    <button
+                        onClick={() => setTab("Home")}
+                        className={`flex-1 py-3 text-center font-bold transition-colors ${tab === "Home" ? "border-b-2 border-black dark:border-white text-black dark:text-white" : "text-gray-500 dark:text-[#8b949e] hover:text-black dark:hover:text-[#c9d1d9]"}`}
+                    >
+                        Home
+                    </button>
+                    <button
+                        onClick={() => setTab("Projects")}
+                        className={`flex-1 py-3 text-center font-bold transition-colors ${tab === "Projects" ? "border-b-2 border-black dark:border-white text-black dark:text-white" : "text-gray-500 dark:text-[#8b949e] hover:text-black dark:hover:text-[#c9d1d9]"}`}
+                    >
+                        Projects
+                    </button>
+                </div>
 
-          {/* Tech Orbit Section */}
-          <section className="relative overflow-hidden">
-            <PurpleFlare className="top-0 right-1/4" size={350} delay={0.2} />
-            <PurpleFlare className="bottom-0 left-1/3" size={300} delay={0.4} />
-            <div className="section-container relative z-10">
-              <div className="text-center mb-4">
-                <span className="text-sm font-mono text-accent-primary tracking-widest uppercase mb-4 block">
-                  {"// Tech Universe"}
-                </span>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                  My <span className="gradient-text">Tech Stack</span>
-                </h2>
-                <p className="mt-3 text-charcoal-300 max-w-md mx-auto">
-                  The technologies orbiting my development workflow
-                </p>
-              </div>
-              <TechOrbit />
-            </div>
-          </section>
+                {tab === "Home" ? (
+                    <div className="space-y-10">
+                        <section>
+                            <h1 className="text-3xl font-bold mb-6 text-black dark:text-white tracking-wide transition-colors">Hi there</h1>
+                            <p className="leading-relaxed text-gray-600 dark:text-[#8b949e] transition-colors">
+                                I'm {displayName}, a passionate full-stack developer who loves building robust systems and engaging applications. I thrive on architecting backend solutions, designing sleek interfaces, and tinkering with open-source projects. I'm a huge fan of self-hosting my own infrastructure, and you'll find the fruits of my labor—from feature-rich Discord bots to modular authentication systems—right here in my GitHub repositories. Feel free to explore my tech stack and my latest work below!
+                            </p>
+                        </section>
 
-          <SectionDivider />
-          <Skills />
-          <SectionDivider />
+                        <section>
+                            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white tracking-wide transition-colors">Technologies I use</h2>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex flex-wrap gap-2 items-center">
+                                    <span className="w-24 text-xs text-gray-500 dark:text-[#8b949e] font-bold uppercase tracking-wider transition-colors">Languages</span>
+                                    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+                                    <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+                                    <img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go" />
+                                    <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
+                                </div>
+                                <div className="flex flex-wrap gap-2 items-center">
+                                    <span className="w-24 text-xs text-gray-500 dark:text-[#8b949e] font-bold uppercase tracking-wider transition-colors">Frontend</span>
+                                    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+                                    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+                                    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+                                </div>
+                                <div className="flex flex-wrap gap-2 items-center">
+                                    <span className="w-24 text-xs text-gray-500 dark:text-[#8b949e] font-bold uppercase tracking-wider transition-colors">Database</span>
+                                    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+                                    <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
+                                    <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+                                </div>
+                                <div className="flex flex-wrap gap-2 items-center">
+                                    <span className="w-24 text-xs text-gray-500 dark:text-[#8b949e] font-bold uppercase tracking-wider transition-colors">DevOps</span>
+                                    <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux" />
+                                    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+                                    <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
+                                    <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS" />
+                                    <img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" />
+                                    <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+                                </div>
+                            </div>
+                        </section>
 
-          <section className="relative overflow-hidden">
-            <PurpleFlare className="top-0 left-1/4" size={400} delay={0.2} />
-            <PurpleFlare className="bottom-0 right-1/4" size={350} delay={0.4} />
-            <div className="section-container relative z-10">
-              <div className="text-center mb-8">
-                <span className="text-sm font-mono text-accent-primary tracking-widest uppercase mb-4 block">{"// Live Code"}</span>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">What I <span className="gradient-text">Write</span></h2>
-              </div>
-              <CodeSlideshow />
-            </div>
-          </section>
+                        <section>
+                            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white tracking-wide transition-colors">Some Projects</h2>
+                            <ul className="list-disc list-inside space-y-3 text-gray-600 dark:text-[#8b949e] transition-colors">
+                                <li className="leading-relaxed">
+                                    <a href="https://zeonbot.xyz/" target="_blank" rel="noreferrer" className="text-[#58a6ff] hover:underline font-bold">
+                                        ZEON
+                                    </a>
+                                    <span className="ml-2 text-sm text-gray-500 dark:text-[#8b949e]">- A security and multipurpose Discord bot</span>
+                                </li>
+                                <li className="leading-relaxed">
+                                    <a href={`https://github.com/${githubUsername}/SlugYZeon`} target="_blank" rel="noreferrer" className="text-[#58a6ff] hover:underline font-bold">
+                                        SlugYZeon
+                                    </a>
+                                    <span className="ml-2 text-sm text-gray-500 dark:text-[#8b949e]">- A Lavalink plugin with sources for Spotify, Gaana, Pandora, Amazon Music, etc.</span>
+                                </li>
+                                <li className="leading-relaxed">
+                                    <a href={`https://github.com/${githubUsername}/${githubUsername}`} target="_blank" rel="noreferrer" className="text-[#58a6ff] hover:underline font-bold">
+                                        1xylen.site
+                                    </a>
+                                    <span className="ml-2 text-sm text-gray-500 dark:text-[#8b949e]">- My personal developer portfolio</span>
+                                </li>
+                            </ul>
+                        </section>
 
-          <SectionDivider />
-          <Projects />
-          <SectionDivider />
-          <GithubStats />
-          <SectionDivider />
-          <Testimonials />
-          <SectionDivider />
-          <Experience />
-        </main>
-        <Footer />
-      </motion.div>
-    </>
-  );
+                        <section className="pt-6">
+                            <h2 className="text-xl font-bold mb-4 text-white tracking-wide">I'm currently listening to:</h2>
+                            <DiscordProfile />
+                        </section>
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        <GithubProjects variant="cards" />
+                    </div>
+                )}
+            </main>
+        </div>
+    );
 }
